@@ -7,7 +7,10 @@ SETUP_REQUIRES = [
     "setuptools",
 ]
 
-INSTALL_REQUIRES = []
+INSTALL_REQUIRES = [
+    "faker",
+    "tqdm",
+]
 
 EXTRAS_REQUIRE = {
     "develop": [
