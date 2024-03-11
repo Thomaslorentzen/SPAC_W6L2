@@ -4,3 +4,4 @@ build/*
 # Files
 *.egg-info
 *.pyc
+*.csv
