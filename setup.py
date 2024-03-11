@@ -11,6 +11,7 @@ INSTALL_REQUIRES = [
     "faker",
     "tqdm",
     "mysql",
+    "sqlalchemy",
 ]
 
 EXTRAS_REQUIRE = {
