@@ -1,0 +1,6 @@
+# Folders
+build/*
+
+# Files
+*.egg-info
+*.pyc
