@@ -2,6 +2,9 @@
 build/*
 
 # Files
+config.json
+
+# File extensions
 *.egg-info
 *.pyc
 *.csv
