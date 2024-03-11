@@ -1,21 +1,20 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+from books import Book
 
-from src.books import Book
-from src.constants import Base
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    books = relationship("Book", back_populates="user")
+    name = Column(String)
+    user_id = Column(String, unique=True)
 
-    def __init__(self, name, user_id):
-        self.name = name
-        self.user_id = user_id
-        self.borrowed_books = []
+    borrowed_books = relationship("Book", secondary="borrowed_books")
 
     def borrow_book(self, book):
         if book.is_available():
@@ -36,3 +35,13 @@ class User(Base):
                 return False  # Error in returning book
         else:
             return False  # User hasn't borrowed this book
+
+
+class BorrowedBooks(Base):
+    __tablename__ = "borrowed_books"
+
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    book_id = Column(Integer, ForeignKey("books.id"), primary_key=True)
+
+    user = relationship(User, backref="borrowed_books")
+    book = relationship("Book", backref="borrowed_by")

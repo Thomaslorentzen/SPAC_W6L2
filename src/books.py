@@ -1,27 +1,20 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from src.constants import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class Book(Base):
     __tablename__ = "books"
 
-    unique_ISBN = Column(String(255), primary_key=True, autoincrement=False)
-    title = Column(String(50))
-    author = Column(String(50))
-    publish_year = Column(Integer)
-    user_id = Column(
-        Integer, ForeignKey("users.id")
-    )  # Foreign key to link to users table
-    user = relationship("User", back_populates="books")
-
-    def __init__(self, title, author, release_year, unique_ISBN):
-        self.title = title
-        self.author = author
-        self.release_year = release_year
-        self.unique_ISBN = unique_ISBN
-        self.available = True
-        self.reserved = None
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    author = Column(String)
+    release_year = Column(Integer)
+    unique_ISBN = Column(String, unique=True)
+    available = Column(Boolean, default=True)
+    reserved_by = Column(Integer, ForeignKey("users.id"))
 
     def is_available(self):
         return self.available
