@@ -10,6 +10,7 @@ SETUP_REQUIRES = [
 INSTALL_REQUIRES = [
     "faker",
     "tqdm",
+    "mysql",
 ]
 
 EXTRAS_REQUIRE = {
