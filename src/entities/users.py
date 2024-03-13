@@ -3,8 +3,8 @@
 from sqlalchemy import BIGINT, Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
-from src.entities.books import Book
 from src.constants import Base
+from src.entities.books import Book
 
 
 class User(Base):  # type: ignore
@@ -17,7 +17,10 @@ class User(Base):  # type: ignore
     address = Column(String(255))
 
     borrowed_books = relationship(
-        "Book", secondary="borrowed_books", back_populates="borrowers"
+        "Book",
+        secondary="borrowed_books",
+        back_populates="borrowers",
+        overlaps="borrowed_books",
     )
 
     def __init__(self, name: str, user_id: int, address: str):
@@ -77,6 +80,3 @@ class BorrowedBooks(Base):  # type: ignore
 
     user_id = Column(BIGINT, ForeignKey("users.user_id"), primary_key=True)
     book_id = Column(BIGINT, ForeignKey("books.unique_ISBN"), primary_key=True)
-
-    user_borrowed = relationship("User", backref="books_borrowed")
-    book_borrowed = relationship("Book", backref="borrowed_by")
