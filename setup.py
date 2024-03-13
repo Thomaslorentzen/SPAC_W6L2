@@ -7,7 +7,13 @@ SETUP_REQUIRES = [
     "setuptools",
 ]
 
-INSTALL_REQUIRES = []
+INSTALL_REQUIRES = [
+    "faker",
+    "tqdm",
+    "mysql",
+    "sqlalchemy",
+    "mysql-connector-python",
+]
 
 EXTRAS_REQUIRE = {
     "develop": [
