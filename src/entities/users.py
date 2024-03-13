@@ -3,7 +3,7 @@
 from sqlalchemy import BIGINT, Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
-from src.books import Book
+from src.entities.books import Book
 from src.constants import Base
 
 

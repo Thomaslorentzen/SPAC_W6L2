@@ -6,9 +6,9 @@ import mysql
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from src.books import Book
+from src.entities.books import Book
 from src.constants import Base
-from src.users import User
+from src.entities.users import User
 
 
 def create_database(username: str, password: str) -> Session:
