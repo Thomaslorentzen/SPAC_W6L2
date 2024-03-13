@@ -1,20 +1,26 @@
-from books import Book
+from src.books import Book
+from src.constants import Base
 
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, BIGINT, String, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    user_id = Column(String, unique=True)
+    user_id = Column(BIGINT, primary_key=True, unique=True, autoincrement=False)
+    name = Column(String(255))
+    address = Column(String(255))
 
-    borrowed_books = relationship("Book", secondary="borrowed_books")
+    borrowed_books = relationship(
+        "Book", secondary="borrowed_books", back_populates="borrowers"
+    )
+
+    def __init__(self, name, user_id, address):
+        self.name = name
+        self.user_id = user_id
+        self.address = address
+        self.borrowed_books = []
 
     def borrow_book(self, book):
         if book.is_available():
@@ -40,8 +46,8 @@ class User(Base):
 class BorrowedBooks(Base):
     __tablename__ = "borrowed_books"
 
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    book_id = Column(Integer, ForeignKey("books.id"), primary_key=True)
+    user_id = Column(BIGINT, ForeignKey("users.user_id"), primary_key=True)
+    book_id = Column(BIGINT, ForeignKey("books.unique_ISBN"), primary_key=True)
 
-    user = relationship(User, backref="borrowed_books")
-    book = relationship("Book", backref="borrowed_by")
+    user_borrowed = relationship("User", backref="books_borrowed")
+    book_borrowed = relationship("Book", backref="borrowed_by")
