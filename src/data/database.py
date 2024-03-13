@@ -1,11 +1,26 @@
+"""Functions to handle sql database."""
+
+from typing import Any, Generator, Union
+
 import mysql
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
+from src.entities.books import Book
 from src.constants import Base
+from src.entities.users import User
 
 
-def create_database(username: str, password: str):
+def create_database(username: str, password: str) -> Session:
+    """Create the sql database if not present and connect.
+
+    Args:
+        username (str): Username for sql server.
+        password (str): Password for sql server.
+
+    Returns:
+        Session: Connection to sql server.
+    """
     # Create an engine to connect to your MySQL server
     engine = create_engine(
         f"mysql+mysqlconnector://{username}:{password}@localhost/", echo=True
@@ -20,7 +35,7 @@ def create_database(username: str, password: str):
         password=password,
     )
     cursor = connection.cursor()
-    cursor.execute(f"CREATE DATABASE IF NOT EXISTS library")
+    cursor.execute("CREATE DATABASE IF NOT EXISTS library")
 
     # Close the connection
     connection.close()
@@ -41,7 +56,20 @@ def create_database(username: str, password: str):
     return session
 
 
-def upload_data_in_chunks(session, data, chunk_size, dataclass):
+def upload_data_in_chunks(
+    session: Session,
+    data: Generator[dict[str, Any], None, None],
+    chunk_size: int,
+    dataclass: Union[type[User], type[Book]],
+) -> None:
+    """Upload data to sql server in chuncks.
+
+    Args:
+        session (Session): Connection to sql server.
+        data (Generator[Dict[str, Any], None, None]): Data.
+        chunk_size (int): Size of chunks to be uploaded.
+        dataclass Union[User, Book]: Class of the data.
+    """
     chunk = []
     for record in data:
         chunk.append(dataclass(**record))
@@ -52,3 +80,24 @@ def upload_data_in_chunks(session, data, chunk_size, dataclass):
     if chunk:
         session.bulk_save_objects(chunk)
         session.commit()
+
+
+def is_table_empty(session: Session, table: type[Book]) -> bool:
+    """Check if a table is empty.
+
+    Args:
+        session (Session): Connection to the sql database.
+        table (Book): Table to be checked.
+
+    Returns:
+        bool: Is table empty.
+    """
+    # Count the number of rows in the table
+    count = session.query(table).count()
+
+    # If the count is zero, the table is empty
+    return bool(count == 0)
+
+
+if __name__ == "__main__":
+    pass
