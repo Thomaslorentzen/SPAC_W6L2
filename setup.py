@@ -12,6 +12,7 @@ INSTALL_REQUIRES = [
     "tqdm",
     "mysql",
     "sqlalchemy",
+    "mysql-connector-python",
 ]
 
 EXTRAS_REQUIRE = {
