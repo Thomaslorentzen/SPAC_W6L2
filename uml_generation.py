@@ -41,8 +41,10 @@ def Create_uml() -> None:
             ],
         )
 
-        # Generate PNG image from the .dot file
-        subprocess.run(["dot", "-Tpng", dot_file_path, "-o", png_file_path])
+        # Check the size of the .dot file
+        if os.path.getsize(dot_file_path) > 200:
+            # Generate PNG image from the .dot file
+            subprocess.run(["dot", "-Tpng", dot_file_path, "-o", png_file_path])
 
         # Remove the .dot file after generating the PNG image
         os.remove(dot_file_path)
