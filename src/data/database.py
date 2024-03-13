@@ -60,7 +60,7 @@ def upload_data_in_chunks(
     session: Session,
     data: Generator[dict[str, Any], None, None],
     chunk_size: int,
-    dataclass: Union[User, Book],
+    dataclass: Union[type[User], type[Book]],
 ) -> None:
     """Upload data to sql server in chuncks.
 
@@ -82,7 +82,7 @@ def upload_data_in_chunks(
         session.commit()
 
 
-def is_table_empty(session: Session, table: Book) -> bool:
+def is_table_empty(session: Session, table: type[Book]) -> bool:
     """Check if a table is empty.
 
     Args:
