@@ -1,9 +1,9 @@
 """Main script."""
 
-from src.books import Book
+from src.entities.books import Book
 from src.data.database import create_database, is_table_empty, upload_data_in_chunks
 from src.data.generator import generate_fake_data_book, generate_fake_data_user
-from src.users import User
+from src.entities.users import User
 from src.utils import ConfigManager
 
 
