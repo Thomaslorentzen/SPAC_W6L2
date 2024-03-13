@@ -1,8 +1,8 @@
 """Main script."""
 
-from src.entities.books import Book
 from src.data.database import create_database, is_table_empty, upload_data_in_chunks
 from src.data.generator import generate_fake_data_book, generate_fake_data_user
+from src.entities.books import Book
 from src.entities.users import User
 from src.utils import ConfigManager
 
@@ -25,10 +25,12 @@ def main(num_books: int, num_users: int) -> None:
         book_data = generate_fake_data_book(num_books)
         user_data = generate_fake_data_user(num_users)
 
-    # Upload data in chunks
-    chunk_size = 100
-    upload_data_in_chunks(session, book_data, chunk_size, Book)
-    upload_data_in_chunks(session, user_data, chunk_size, User)
+        # Upload data in chunks
+        chunk_size = 100
+        upload_data_in_chunks(session, book_data, chunk_size, Book)
+        upload_data_in_chunks(session, user_data, chunk_size, User)
+
+    session.close()
 
 
 if __name__ == "__main__":
