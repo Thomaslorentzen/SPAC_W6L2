@@ -13,6 +13,7 @@ INSTALL_REQUIRES = [
     "mysql",
     "sqlalchemy",
     "mysql-connector-python",
+    "pylint",
 ]
 
 EXTRAS_REQUIRE = {
