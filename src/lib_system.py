@@ -1,10 +1,41 @@
 from books import Book
 from functools import wraps
 
+
+class SearchStrategy:
+    def search(self, books, query):
+        raise NotImplementedError()
+
+class TitleSearchStrategy(SearchStrategy):
+    def search(self, books, query):
+        for book in books:
+            if query.lower() in book.title.lower():
+                yield book
+
+class AuthorSearchStrategy(SearchStrategy):
+    def search(self, books, query):
+        for book in books:
+            if query.lower() in book.author.lower():
+                yield book
+
+class ISBNSearchStrategy(SearchStrategy):
+    def search(self, books, query):
+        for book in books:
+            if query.lower() in book.unique_ISBN.lower():
+                yield book
+
+class yearSearchStrategy(SearchStrategy):
+    def search(self, books, query):
+        for book in books:
+            if book.release_year == query:
+                yield book
+
+
 class LibrarySystem:
     def __init__(self):
         self.books = []  # Liste over bøger i biblioteket
         self.users = {}  # Dictionary af brugerkonti (bruger_id: User)
+        self.search_strategy = None
     
     def log_activity(func):
         @wraps(func)
@@ -79,3 +110,7 @@ class LibrarySystem:
         # Returnér en fejlbesked, hvis bogen ikke blev fundet
         return "Bogen med det angivne ID blev ikke fundet."
     
+class ReservedBookNotification:
+    def update(self, book):
+        if book.available:
+            print(f"Bogen '{book.title}' er nu tilgængelig. Notifikation sendt til bruger {book.reserved_by}.")
