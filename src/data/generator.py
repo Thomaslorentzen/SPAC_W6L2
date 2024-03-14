@@ -10,7 +10,7 @@ from src.constants import fake
 
 
 def generate_fake_data_user(num_users: int) -> Generator[dict[str, Any], None, None]:
-    """Generate fake users.
+    """Generate fake userTkinter):
 
     Args:
         Num_users (int): Number of fake users.
@@ -20,7 +20,7 @@ def generate_fake_data_user(num_users: int) -> Generator[dict[str, Any], None, N
     """
     for _ in range(num_users):
         yield {
-            "user_id": time.perf_counter_ns(),
+            "user_id": int(str(random.randint(1000, 9999)) + str(time.perf_counter_ns())),
             "name": fake.name(),
             "address": fake.address(),
         }
@@ -41,7 +41,7 @@ def generate_fake_data_book(num_records: int) -> Generator[dict[str, Any], None,
             "title": fake.text(max_nb_chars=50),
             "author": fake.name(),
             "release_year": fake.random_int(min=1950, max=current_year),
-            "unique_ISBN": time.perf_counter_ns(),
+            "unique_ISBN": int(str(random.randint(1000, 9999)) + str(time.perf_counter_ns())),
         }
 
 

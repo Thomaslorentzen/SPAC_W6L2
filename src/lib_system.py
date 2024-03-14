@@ -13,7 +13,6 @@ class TitleSearchStrategy(SearchStrategy):
             if query.lower() in book.title.lower():
                 yield book
 
-
 class AuthorSearchStrategy(SearchStrategy):
     def search(self, books, query):
         for book in books:
@@ -21,25 +20,37 @@ class AuthorSearchStrategy(SearchStrategy):
                 yield book
 
 
+
 class ISBNSearchStrategy(SearchStrategy):
     def search(self, books, query):
         for book in books:
-            if query.lower() in book.unique_ISBN.lower():
+            if str(book.unique_ISBN) == str(query):
                 yield book
+
 
 
 class yearSearchStrategy(SearchStrategy):
     def search(self, books, query):
+        # Convert the query to an integer
+        query_year = int(query)
+        
         for book in books:
-            if book.release_year == query:
+            print("Book release year:", book.release_year)
+            # Compare the release_year with the query_year
+            if book.release_year == query_year:
                 yield book
 
 
+
+
 class LibrarySystem:
-    def __init__(self):
-        self.books = []  # Liste over bøger i biblioteket
-        self.users = {}  # Dictionary af brugerkonti (bruger_id: User)
+    def __init__(self, books=None):
+        self.books = books if books is not None else []
+        self.users = {}
         self.search_strategy = None
+
+    def set_books(self, books):
+        self.books = books
 
     def log_activity(func):
         @wraps(func)
@@ -71,13 +82,13 @@ class LibrarySystem:
         del self.users[user.user_id]
 
     def search_books(self, query):
-        # Implementer søgning i bogsamlingen ved hjælp af list comprehensions eller generators
-        for books in self.books:
-            if (
-                query.lower() in books.title.lower()
-                or query.lower() in books.author.lower()
-            ):
-                yield books
+        # Check if a search strategy is set
+        if self.search_strategy is None:
+            raise ValueError("No search strategy set")
+
+        # Perform search using the selected strategy
+        return self.search_strategy.search(self.books, query)
+
 
     @log_activity
     def loan_book(self, user_id, book_id):
