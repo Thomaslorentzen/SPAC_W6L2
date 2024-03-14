@@ -30,9 +30,6 @@ def main(num_books: int, num_users: int) -> None:
         connection.upload_data_in_chunks(book_data, chunk_size, Book)
         connection.upload_data_in_chunks(user_data, chunk_size, User)
 
-    connection.add_book("Example book", "Example Auther", 2000, 1)
-    connection.add_user("T. Ester", 69420, "Madeup Blv.")
-
     connection.session.close()
 
 

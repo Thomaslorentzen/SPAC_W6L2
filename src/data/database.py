@@ -170,6 +170,44 @@ class SQLConnection:
             self.session.rollback()
             print(f"Failed to add book: {e}")
 
+    def remove_user_by_id(self, user_id: int) -> bool:
+        """Remove a user from the database by their ID.
+
+        Args:
+            user_id (int): The ID of the user to remove.
+
+        Returns:
+            bool: True if the user was successfully removed, False otherwise.
+        """
+        try:
+            user = self.session.query(User).filter(User.user_id == user_id).one()
+            self.session.delete(user)
+            self.session.commit()
+            return True
+        except IntegrityError:
+            self.session.rollback()
+            return False
+
+    def remove_book_by_id(self, unique_ISBN: int) -> bool:
+        """Remove a book from the database by its unique ISBN.
+
+        Args:
+            unique_ISBN (int): The unique ISBN of the book to remove.
+
+        Returns:
+            bool: True if the book was successfully removed, False otherwise.
+        """
+        try:
+            book = (
+                self.session.query(Book).filter(Book.unique_ISBN == unique_ISBN).one()
+            )
+            self.session.delete(book)
+            self.session.commit()
+            return True
+        except IntegrityError:
+            self.session.rollback()
+            return False
+
 
 if __name__ == "__main__":
     pass
