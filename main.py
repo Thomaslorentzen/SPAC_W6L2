@@ -4,9 +4,9 @@ from sqlalchemy.orm import sessionmaker
 from src.data.database import create_database
 import tkinter as tkinter
 from tkinter import ttk
-from src.entities.books import Book
-from src.data.database import create_database, is_table_empty, upload_data_in_chunks
+from src.data.database import SQLConnection
 from src.data.generator import generate_fake_data_book, generate_fake_data_user
+from src.entities.books import Book
 from src.entities.users import User
 from src.utils import ConfigManager
 from src.lib_system import LibrarySystem, ReservedBookNotification, yearSearchStrategy, TitleSearchStrategy, ISBNSearchStrategy, AuthorSearchStrategy
@@ -146,17 +146,19 @@ def main(num_books: int, num_users: int) -> None:
     config_manager = ConfigManager("config.json")
 
     # Create SQL server if not present
-    session = create_database(config_manager.username(), config_manager.password())
+    connection = SQLConnection(config_manager.username(), config_manager.password())
 
     # Generate fake data if database empty
-    if is_table_empty(session, Book):
+    if connection.is_table_empty(Book):
         book_data = generate_fake_data_book(num_books)
         user_data = generate_fake_data_user(num_users)
 
-        # Upload data in chunks
-        chunk_size = 100
-        upload_data_in_chunks(session, book_data, chunk_size, Book)
-        upload_data_in_chunks(session, user_data, chunk_size, User)
+            # Upload data in chunks
+            chunk_size = 100
+            connection.upload_data_in_chunks(book_data, chunk_size, Book)
+            connection.upload_data_in_chunks(user_data, chunk_size, User)
+
+    connection.session.close()
 """
 
 if __name__ == "__main__":
