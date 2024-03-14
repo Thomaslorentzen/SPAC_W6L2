@@ -1,10 +1,9 @@
 """Main script."""
 from sqlalchemy.orm import sessionmaker
 
-from src.data.database import create_database
+from src.data.database import SQLConnection
 import tkinter as tkinter
 from tkinter import ttk
-from src.data.database import SQLConnection
 from src.data.generator import generate_fake_data_book, generate_fake_data_user
 from src.entities.books import Book
 from src.entities.users import User
@@ -22,7 +21,7 @@ class LibraryApp(tkinter.Tk):
         self.password = self.config_manager.password()
         self.geometry("600x400")
         
-    
+        self.connection = SQLConnection(self.user_name, self.password)
         # Load books from the database or any other source
         books = self.load_books_from_database()  # Implement this function based on your database logic
 
@@ -74,7 +73,7 @@ class LibraryApp(tkinter.Tk):
 
     def load_books_from_database(self):
     # Create the database session using the existing function
-        session = create_database(self.user_name, self.password)
+        session = self.connection.create_database()
 
         # Fetch all books from the database
         books = session.query(Book).all()
@@ -85,14 +84,14 @@ class LibraryApp(tkinter.Tk):
         return books
 
     def create_database(self):
-            session = create_database(self.config_manager.username(), self.config_manager.password())
+            session = self.connection.create_database()
             num_books = 1000
             num_users = 200
             book_data = generate_fake_data_book(num_books)
             user_data = generate_fake_data_user(num_users)
             chunk_size = 100
-            upload_data_in_chunks(session, book_data, chunk_size, Book)
-            upload_data_in_chunks(session, user_data, chunk_size, User)
+            #upload_data_in_chunks(session, book_data, chunk_size, Book)
+            #upload_data_in_chunks(session, user_data, chunk_size, User)
 
     def search_books(self):
         query = self.query_entry.get()
