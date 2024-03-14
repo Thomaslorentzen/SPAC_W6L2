@@ -28,7 +28,7 @@ This Python project is developed as part of a software solution for libraries. T
 - Consider additional relevant reports such as loan history for a specific book, overall loans, etc.
 
 ## Menu
-- A terminal-based menu will be implemented to allow users to navigate the program seamlessly.
+- A GUI will be implemented to allow users to access the system seamlessly.
 
 
 ## Installation Guide
