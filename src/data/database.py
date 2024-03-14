@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from src.constants import Base
 from src.entities.books import Book
 from src.entities.users import User
+from src.utils import generate_id
 
 
 class SQLConnection:
@@ -114,16 +115,15 @@ class SQLConnection:
         # If the count is zero, the table is empty
         return bool(count == 0)
 
-    def add_user(self, name: str, user_id: int, address: str) -> None:
+    def add_user(self, name: str, address: str) -> None:
         """Add a user to the database.
 
         Args:
             name (str): Name of user
-            user_id (int): ID of user.
             address (str): Address of user.
         """
-        # TODO: automatically make id instead of it being an input.
         try:
+            user_id = generate_id()
             new_user = User(name=name, user_id=user_id, address=address)
             self.session.add(new_user)
             self.session.commit()
@@ -137,7 +137,6 @@ class SQLConnection:
         title: str,
         author: str,
         release_year: int,
-        unique_ISBN: int,
     ) -> None:
         """Add a book to the database.
 
@@ -145,9 +144,9 @@ class SQLConnection:
             title (str): Title of book.
             author (str): Author of book.
             release_year (int): Release year of book.
-            unique_ISBN (int): ID of the book.
         """
         try:
+            unique_ISBN = generate_id()
             new_book = Book(
                 title=title,
                 author=author,

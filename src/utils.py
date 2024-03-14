@@ -1,6 +1,8 @@
 """Utilities to be used thoughout the code."""
 
 import json
+import random
+import time
 from typing import Any
 
 
@@ -40,3 +42,12 @@ class ConfigManager:
             Any: Password.
         """
         return self.config["password"]
+
+
+def generate_id() -> int:
+    """Generate unique id.
+
+    Returns:
+        int: Unique id.
+    """
+    return int(str(random.randint(1000, 9999)) + str(time.perf_counter_ns()))
