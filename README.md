@@ -75,3 +75,4 @@ Create a file containing the fields username and password in the repocetory dire
 - **Virtual Environment:** Creating a virtual environment is a good practice to isolate project dependencies from other projects and the system Python environment.
 - **pip Install:** The `pip install .` command installs the necessary packages specified in the `setup.py` file from the current directory.
 - **requirements** The required packages can be found in the `setup.py` file as the variable `INSTALL_REQQUIRES`.
+- **UML diagrams** UML diagrams can be generated using the `uml_generator.py` file and will be located in a new folder called `UML`
