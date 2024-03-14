@@ -1,10 +1,10 @@
 """Functions to handle sql database."""
 
-from typing import Any, Generator, Optional, Union
+from typing import Any, Generator, Union
 
-import mysql
+from mysql import connector
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from src.constants import Base
@@ -47,25 +47,16 @@ class SQLConnection:
         Returns:
             Session: Connection to sql server.
         """
-        # Create an engine to connect to your MySQL server
-        engine = create_engine(
-            f"mysql+mysqlconnector://{self.username}:{self.password}@localhost/",
-            echo=True,
-        )
-
-        # Connect to the MySQL server and obtain a connection object
-        connection = engine.connect()
-
-        connection = mysql.connector.connect(
+        connection_mysql = connector.connect(
             host="localhost",
             user=self.username,
             password=self.password,
         )
-        cursor = connection.cursor()
+        cursor = connection_mysql.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS library")
 
         # Close the connection
-        connection.close()
+        connection_mysql.close()
 
         # Now connect to the 'library' database
         engine = create_engine(
