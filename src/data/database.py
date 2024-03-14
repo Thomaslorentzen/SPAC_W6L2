@@ -1,10 +1,10 @@
 """Functions to handle sql database."""
 
-from typing import Any, Generator, Optional, Union
+from typing import Any, Generator, Union
 
 import mysql
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from src.constants import Base
