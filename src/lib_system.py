@@ -35,7 +35,7 @@ class yearSearchStrategy(SearchStrategy):
         query_year = int(query)
         
         for book in books:
-            print("Book release year:", book.release_year)
+            #print("Book release year:", book.release_year)
             # Compare the release_year with the query_year
             if book.release_year == query_year:
                 yield book
@@ -48,13 +48,14 @@ class LibrarySystem:
         self.books = books if books is not None else []
         self.users = {}
         self.search_strategy = None
+        self.transcript = []
 
     def set_books(self, books):
         self.books = books
 
     def log_activity(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(self, *args, **kwargs):
             # Log aktivitet
             activity = (
                 f"Function '{func.__name__}' called with args: {args}, kwargs: {kwargs}"
@@ -62,7 +63,17 @@ class LibrarySystem:
             print(activity)
 
             # Kald den oprindelige funktion
-            result = func(*args, **kwargs)
+            result = func(self, *args, **kwargs)
+
+             # Log transaction details to transcript
+            if "user_id" in kwargs and "book_id" in kwargs:
+                user_id = kwargs["user_id"]
+                book_id = kwargs["book_id"]
+                book = next((b for b in self.books if b.unique_ISBN == book_id), None)
+                if book:
+                    action = func.__name__.replace("_", " ").capitalize()
+                    transcript_entry = f"User ID: {user_id}, Action: {action}, Book Title: {book.title}, Book ID: {book_id}"
+                    self.transcript.append(transcript_entry)
 
             # Returnér resultatet af funktionen
             return result
@@ -107,14 +118,14 @@ class LibrarySystem:
     def return_book(self, user_id, book_id):
         for book in self.books:
             if book.unique_ISBN == book_id:
-                if book.is_available():
+                if not book.is_available():
                     book.return_book(user_id)
-                    return f"Bogen '{book.title}' er blevet returnert til bruger med ID {user_id}."
+                    return f"Bogen '{book.title}' er blevet afleveret af bruger med ID {user_id}."
                 else:
-                    return f"Bogen '{book.title}' er allerede returnert."
+                    return f"Bogen '{book.title}' er allerede tilgængelig på biblioteket."
 
-        # Returnér en fejlbesked, hvis bogen ikke blev fundet
-        return "Bogen med det angivne ID blev ikke fundet."
+        return "Bogen med det specifikke ID blev ikke fundet."
+
 
     @log_activity
     def reserve_book(self, user_id, book_id):
