@@ -40,3 +40,7 @@ class ConfigManager:
             Any: Password.
         """
         return self.config["password"]
+
+
+if __name__ == "__main__":
+    pass

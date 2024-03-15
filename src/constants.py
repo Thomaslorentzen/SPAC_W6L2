@@ -6,3 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 fake = Faker()
+
+if __name__ == "__main__":
+    pass
