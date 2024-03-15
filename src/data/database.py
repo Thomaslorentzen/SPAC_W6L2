@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from src.constants import Base
+from src.data.generator import generate_fake_data_book, generate_fake_data_user
 from src.entities.books import Book
 from src.entities.users import User
 from src.utils import generate_id
@@ -197,6 +198,29 @@ class SQLConnection:
         except IntegrityError:
             self.session.rollback()
             return False
+
+    def load_books_from_database(self) -> list[type[Book]]:
+        """Fetch all books from the database.
+
+        Returns:
+            list[type[Book]]: Books from database.
+        """
+        books = self.session.query(Book).all()
+
+        return books  # type: ignore
+
+    def create_fake_dataset(self) -> None:
+        """Create fake data for database."""
+        if self.is_table_empty(Book):
+            num_books = 1000
+            num_users = 200
+            book_data = generate_fake_data_book(num_books)
+            user_data = generate_fake_data_user(num_users)
+            chunk_size = 100
+            self.upload_data_in_chunks(book_data, chunk_size, Book)
+            self.upload_data_in_chunks(user_data, chunk_size, User)
+        else:
+            pass
 
 
 if __name__ == "__main__":

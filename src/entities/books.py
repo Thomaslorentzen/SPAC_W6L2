@@ -85,3 +85,7 @@ class Book(Base):  # type: ignore
         self.available = True
         self.reserved_by = None
         return True
+
+
+if __name__ == "__main__":
+    pass

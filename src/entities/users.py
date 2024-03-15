@@ -80,3 +80,7 @@ class BorrowedBooks(Base):  # type: ignore
 
     user_id = Column(BIGINT, ForeignKey("users.user_id"), primary_key=True)
     book_id = Column(BIGINT, ForeignKey("books.unique_ISBN"), primary_key=True)
+
+
+if __name__ == "__main__":
+    pass

@@ -51,3 +51,7 @@ def generate_id() -> int:
         int: Unique id.
     """
     return int(str(random.randint(1000, 9999)) + str(time.perf_counter_ns()))
+
+
+if __name__ == "__main__":
+    pass
